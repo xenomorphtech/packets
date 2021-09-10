@@ -67,7 +67,7 @@ displayEntry a b = {txt: a, index: b}
 render :: forall m. State -> H.ComponentHTML Action () m
 render state =
   let len = A.length state.messages
-      start = (max 0 (len - 60))
+      start = (max 0 (len - 500))
       slice = A.slice start len state.messages
       msgs = A.mapWithIndex (\index a -> displayEntry a.summary (index + start)) slice 
           
