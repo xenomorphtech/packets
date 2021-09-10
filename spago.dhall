@@ -9,11 +9,13 @@ You can edit this file as you like.
   , "console"
   , "control"
   , "effect"
+  , "either"
   , "freeap"
   , "halogen"
   , "halogen-css"
   , "parallel"
   , "psci-support"
+  , "simple-json"
   , "web-socket"
   ]
 , packages = ./packages.dhall
