@@ -103,20 +103,25 @@ render state =
 
    in
        HH.div_ 
-        [
+         [
           form
-          , HH.div 
+          , HH.div
+             [  HP.class_ $ ClassName "float-container" ]
+         [
+          HH.div 
              [  HP.class_ $ ClassName "packets" ]
               ( map  (\msg -> HH.div [ 
                 HP.class_ $ ClassName (entry_type msg.etype)
                 , HE.onClick (\_ -> Select msg.index) 
                 ] [ HH.text msg.txt ]) msgs) 
           , HH.div 
-             [  HP.class_ $ ClassName "packets" ]
+             [  HP.class_ $ ClassName "float-child" ]
              [ HH.textarea 
                     [ HP.value state.selectedText]
                ]
          ]
+       ]
+     
 
 entry_type_json :: String -> EntryType 
 entry_type_json etype = 
