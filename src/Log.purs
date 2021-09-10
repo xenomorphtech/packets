@@ -47,7 +47,7 @@ initialState _ = { messages: [] , inputText: "" }
 render :: forall m. State -> H.ComponentHTML Action () m
 render state =
   let len = A.length state.messages
-      msgs = A.slice (len - 20) len state.messages 
+      msgs = A.slice (max 0 (len - 60)) len state.messages 
       form = HH.form
                [ HE.onSubmit Submit ] 
                [
@@ -96,6 +96,6 @@ append_msg incomingMessage st =
 handleQuery :: forall m a. Query a -> H.HalogenM State Action () Message m (Maybe a)
 handleQuery = case _ of
   ReceiveMessage msg a -> do
-    let incomingMessage = "packet: " <> msg
+    let incomingMessage = " " <> msg
     H.modify_ (\st -> append_msg incomingMessage st )
     pure (Just a)
