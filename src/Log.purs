@@ -6,6 +6,7 @@ import Data.Array as A
 import Data.Maybe (Maybe(..))
 import Effect.Class (class MonadEffect)
 import Halogen as H
+import CSS.Overflow as Overflow 
 import Halogen.HTML.CSS as CSS
 import Halogen.HTML (ClassName(..))
 import Halogen.HTML as HH
@@ -61,10 +62,14 @@ render state =
                 ]
 
    in
-       HH.div 
-         [ "feed-toggle" ]
-         [ form 
-           ,HH.ol_ $ map (\msg -> HH.li_ [ HH.text msg ]) msgs ]
+       HH.div_ 
+        [
+          form
+          , HH.div 
+             [  HP.class_ $ ClassName "packets" ]
+             [ 
+               HH.ol_ $ map (\msg -> HH.li_ [ HH.text msg ]) msgs ]
+        ]
 
 handleAction :: forall m. MonadEffect m => Action -> H.HalogenM State Action () Message m Unit
 handleAction = case _ of
