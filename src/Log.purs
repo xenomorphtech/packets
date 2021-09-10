@@ -29,10 +29,24 @@ data Action
   | Submit Event
   | Select Int
 
+data EntryType 
+  = Recv 
+  | Send 
+  | Log 
+  | Other
+
+
 type Entry =
   { full :: String
   , summary :: String
   , index :: Int
+  , etype :: EntryType 
+  }
+
+type EntryJson =
+  { full :: String
+  , summary :: String
+  , etype :: String 
   }
 
 type State =
@@ -45,6 +59,7 @@ type State =
 type DisplayEntry =
   { txt :: String
   , index :: Int 
+  , etype :: EntryType 
   }
 
 
@@ -62,14 +77,15 @@ component =
 initialState :: forall i. i -> State
 initialState _ = { messages: [] , inputText: "", selectedIndex: 0, selectedText: "" }
 
-displayEntry :: String -> Int -> DisplayEntry
-displayEntry a b = {txt: a, index: b}
+displayEntry :: String -> Int -> EntryType -> DisplayEntry
+displayEntry a b etype = {txt: a, index: b, etype: etype}
+
 render :: forall m. State -> H.ComponentHTML Action () m
 render state =
   let len = A.length state.messages
       start = (max 0 (len - 500))
       slice = A.slice start len state.messages
-      msgs = A.mapWithIndex (\index a -> displayEntry a.summary (index + start)) slice 
+      msgs = A.mapWithIndex (\index a -> displayEntry a.summary (index + start) a.etype) slice 
           
              
       form = HH.form
@@ -91,14 +107,34 @@ render state =
           form
           , HH.div 
              [  HP.class_ $ ClassName "packets" ]
-             [ 
-               HH.ol_ $ map  (\msg -> HH.li [ HE.onClick (\_ -> Select msg.index) ] [ HH.text msg.txt ]) msgs ]
+              ( map  (\msg -> HH.div [ 
+                HP.class_ $ ClassName (entry_type msg.etype)
+                , HE.onClick (\_ -> Select msg.index) 
+                ] [ HH.text msg.txt ]) msgs) 
           , HH.div 
              [  HP.class_ $ ClassName "packets" ]
              [ HH.textarea 
                     [ HP.value state.selectedText]
                ]
          ]
+
+entry_type_json :: String -> EntryType 
+entry_type_json etype = 
+  case etype of
+       "recv" -> Recv
+       "send" -> Send
+       "log" -> Log
+       _ -> Other
+
+entry_type :: EntryType -> String
+entry_type etype = 
+  case etype of
+       Other -> "other"
+       Recv -> "recv"
+       Send -> "sentpacket"
+       Log -> "log"
+
+
 
 handleAction :: forall m. MonadEffect m => Action -> H.HalogenM State Action () Message m Unit
 handleAction = case _ of
@@ -132,16 +168,21 @@ updateText st ev =
 append_msg :: String -> State -> State
 append_msg incomingMessage st = 
   case JSON.readJSON incomingMessage of
-    Right (r :: Entry) -> do  
-         st { messages = dropcond `A.snoc` r }
+    Right (r :: EntryJson) -> do  
+         st { messages = dropcond `A.snoc` nentry }
          where
                messages = st.messages
                dropcond = if A.length st.messages > 5000 
                           then A.drop 1 st.messages
                           else st.messages
- 
+               nentry = new_entry r 
     Left e -> 
       st 
+
+
+new_entry :: EntryJson -> Entry
+new_entry r = 
+  { summary : r.summary, full: r.full, index: 0, etype: (entry_type_json r.etype)} 
 
 handleQuery :: forall m a. Query a -> H.HalogenM State Action () Message m (Maybe a)
 handleQuery = case _ of
