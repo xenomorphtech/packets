@@ -226,6 +226,7 @@ handleAction = case _ of
   PauseResume -> do
     H.modify_ (\st -> st{ paused = switch st.paused} ) 
 
+
   TurnFilter -> do
     H.modify_ (\st -> st{ filter = switch st.filter} ) 
     st <- H.get
@@ -252,7 +253,10 @@ switch false = true
 
 updateText :: State -> Int -> State
 updateText st ev = 
-      let something = case (A.index st.messages ev) of
+      let messagesSource = case st.searchResult of
+                                Nothing -> st.messages
+                                (Just res) -> res 
+          something = case (A.index messagesSource ev) of
                            (Just x) -> x.full
                            Nothing -> "(NULL)"
        in
