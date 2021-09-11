@@ -34,6 +34,7 @@ data Action
   | PauseResume 
   | Clear
   | RunSearch
+  | ClearSearch
 
  
 data EntryType 
@@ -132,6 +133,10 @@ render state =
       search_button = HH.button
                          [ HE.onClick (\_ -> RunSearch)] 
                          [ HH.text "search" ]
+
+      search_clear_button = HH.button
+                         [ HE.onClick (\_ -> ClearSearch)] 
+                         [ HH.text "clear search" ]
  
       form = HH.form
                [ HE.onSubmit Submit ] 
@@ -153,6 +158,7 @@ render state =
                     , HE.onValueInput HandleInputSearch
                     ]
                 , search_button
+                , search_clear_button 
                 ]
 
    in
@@ -237,6 +243,9 @@ handleAction = case _ of
 
   Clear -> do
     H.modify_ (\st -> st{ messages = [], currentWindowStart = 0, searchResult = Nothing} ) 
+
+  ClearSearch -> do
+    H.modify_ (\st -> st{  searchResult = Nothing} ) 
 
 
 runSearch :: State -> Maybe Entries 

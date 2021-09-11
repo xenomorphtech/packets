@@ -8410,6 +8410,13 @@ var PS = {};
       RunSearch.value = new RunSearch();
       return RunSearch;
   })();
+  var ClearSearch = (function () {
+      function ClearSearch() {
+
+      };
+      ClearSearch.value = new ClearSearch();
+      return ClearSearch;
+  })();
   var updateText = function (st) {
       return function (ev) {
           var messagesSource = (function () {
@@ -8419,7 +8426,7 @@ var PS = {};
               if (st.searchResult instanceof Data_Maybe.Just) {
                   return st.searchResult.value0;
               };
-              throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 256, column 28 - line 258, column 50): " + [ st.searchResult.constructor.name ]);
+              throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 265, column 28 - line 267, column 50): " + [ st.searchResult.constructor.name ]);
           })();
           var something = (function () {
               var v = Data_Array.index(messagesSource)(ev);
@@ -8429,7 +8436,7 @@ var PS = {};
               if (v instanceof Data_Maybe.Nothing) {
                   return "(NULL)";
               };
-              throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 259, column 23 - line 261, column 47): " + [ v.constructor.name ]);
+              throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 268, column 23 - line 270, column 47): " + [ v.constructor.name ]);
           })();
           return {
               messages: st.messages,
@@ -8451,7 +8458,7 @@ var PS = {};
       if (!v) {
           return true;
       };
-      throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 250, column 1 - line 250, column 29): " + [ v.constructor.name ]);
+      throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 259, column 1 - line 259, column 29): " + [ v.constructor.name ]);
   };
   var runSearch = function (st) {
       var result = Data_Array.filter(function (a) {
@@ -8476,26 +8483,26 @@ var PS = {};
       return function (v) {
           if (v instanceof HandleInput) {
               return Control_Monad_State_Class.modify_(Halogen_Query_HalogenM.monadStateHalogenM)(function (v1) {
-                  var $29 = {};
-                  for (var $30 in v1) {
-                      if ({}.hasOwnProperty.call(v1, $30)) {
-                          $29[$30] = v1[$30];
+                  var $31 = {};
+                  for (var $32 in v1) {
+                      if ({}.hasOwnProperty.call(v1, $32)) {
+                          $31[$32] = v1[$32];
                       };
                   };
-                  $29.inputText = v.value0;
-                  return $29;
+                  $31.inputText = v.value0;
+                  return $31;
               });
           };
           if (v instanceof HandleInputSearch) {
               return Control_Monad_State_Class.modify_(Halogen_Query_HalogenM.monadStateHalogenM)(function (v1) {
-                  var $33 = {};
-                  for (var $34 in v1) {
-                      if ({}.hasOwnProperty.call(v1, $34)) {
-                          $33[$34] = v1[$34];
+                  var $35 = {};
+                  for (var $36 in v1) {
+                      if ({}.hasOwnProperty.call(v1, $36)) {
+                          $35[$36] = v1[$36];
                       };
                   };
-                  $33.searchText = v.value0;
-                  return $33;
+                  $35.searchText = v.value0;
+                  return $35;
               });
           };
           if (v instanceof Submit) {
@@ -8503,14 +8510,14 @@ var PS = {};
                   return Control_Bind.bind(Halogen_Query_HalogenM.bindHalogenM)(Control_Monad_State_Class.get(Halogen_Query_HalogenM.monadStateHalogenM))(function (st) {
                       return Control_Bind.discard(Control_Bind.discardUnit)(Halogen_Query_HalogenM.bindHalogenM)(Halogen_Query_HalogenM.raise(new OutputMessage(st.inputText)))(function () {
                           return Control_Monad_State_Class.modify_(Halogen_Query_HalogenM.monadStateHalogenM)(function (st$prime) {
-                              var $37 = {};
-                              for (var $38 in st$prime) {
-                                  if ({}.hasOwnProperty.call(st$prime, $38)) {
-                                      $37[$38] = st$prime[$38];
+                              var $39 = {};
+                              for (var $40 in st$prime) {
+                                  if ({}.hasOwnProperty.call(st$prime, $40)) {
+                                      $39[$40] = st$prime[$40];
                                   };
                               };
-                              $37.inputText = "";
-                              return $37;
+                              $39.inputText = "";
+                              return $39;
                           });
                       });
                   });
@@ -8540,26 +8547,26 @@ var PS = {};
           };
           if (v instanceof PauseResume) {
               return Control_Monad_State_Class.modify_(Halogen_Query_HalogenM.monadStateHalogenM)(function (st) {
-                  var $42 = {};
-                  for (var $43 in st) {
-                      if ({}.hasOwnProperty.call(st, $43)) {
-                          $42[$43] = st[$43];
+                  var $44 = {};
+                  for (var $45 in st) {
+                      if ({}.hasOwnProperty.call(st, $45)) {
+                          $44[$45] = st[$45];
                       };
                   };
-                  $42.paused = $$switch(st.paused);
-                  return $42;
+                  $44.paused = $$switch(st.paused);
+                  return $44;
               });
           };
           if (v instanceof TurnFilter) {
               return Control_Bind.discard(Control_Bind.discardUnit)(Halogen_Query_HalogenM.bindHalogenM)(Control_Monad_State_Class.modify_(Halogen_Query_HalogenM.monadStateHalogenM)(function (st) {
-                  var $45 = {};
-                  for (var $46 in st) {
-                      if ({}.hasOwnProperty.call(st, $46)) {
-                          $45[$46] = st[$46];
+                  var $47 = {};
+                  for (var $48 in st) {
+                      if ({}.hasOwnProperty.call(st, $48)) {
+                          $47[$48] = st[$48];
                       };
                   };
-                  $45.filter = $$switch(st.filter);
-                  return $45;
+                  $47.filter = $$switch(st.filter);
+                  return $47;
               }))(function () {
                   return Control_Bind.bind(Halogen_Query_HalogenM.bindHalogenM)(Control_Monad_State_Class.get(Halogen_Query_HalogenM.monadStateHalogenM))(function (st) {
                       var onoff = "filter" + (function () {
@@ -8569,7 +8576,7 @@ var PS = {};
                           if (!st.filter) {
                               return "off";
                           };
-                          throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 233, column 29 - line 235, column 50): " + [ st.filter.constructor.name ]);
+                          throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 239, column 29 - line 241, column 50): " + [ st.filter.constructor.name ]);
                       })();
                       return Halogen_Query_HalogenM.raise(new OutputMessage(onoff));
                   });
@@ -8577,19 +8584,31 @@ var PS = {};
           };
           if (v instanceof Clear) {
               return Control_Monad_State_Class.modify_(Halogen_Query_HalogenM.monadStateHalogenM)(function (st) {
-                  var $49 = {};
-                  for (var $50 in st) {
-                      if ({}.hasOwnProperty.call(st, $50)) {
-                          $49[$50] = st[$50];
+                  var $51 = {};
+                  for (var $52 in st) {
+                      if ({}.hasOwnProperty.call(st, $52)) {
+                          $51[$52] = st[$52];
                       };
                   };
-                  $49.messages = [  ];
-                  $49.currentWindowStart = 0;
-                  $49.searchResult = Data_Maybe.Nothing.value;
-                  return $49;
+                  $51.messages = [  ];
+                  $51.currentWindowStart = 0;
+                  $51.searchResult = Data_Maybe.Nothing.value;
+                  return $51;
               });
           };
-          throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 199, column 16 - line 239, column 91): " + [ v.constructor.name ]);
+          if (v instanceof ClearSearch) {
+              return Control_Monad_State_Class.modify_(Halogen_Query_HalogenM.monadStateHalogenM)(function (st) {
+                  var $54 = {};
+                  for (var $55 in st) {
+                      if ({}.hasOwnProperty.call(st, $55)) {
+                          $54[$55] = st[$55];
+                      };
+                  };
+                  $54.searchResult = Data_Maybe.Nothing.value;
+                  return $54;
+              });
+          };
+          throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 205, column 16 - line 248, column 53): " + [ v.constructor.name ]);
       };
   };
   var entry_type_json = function (etype) {
@@ -8625,7 +8644,7 @@ var PS = {};
       if (etype instanceof Log) {
           return "log";
       };
-      throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 190, column 3 - line 194, column 20): " + [ etype.constructor.name ]);
+      throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 196, column 3 - line 200, column 20): " + [ etype.constructor.name ]);
   };
   var displayEntry = function (a) {
       return function (b) {
@@ -8639,13 +8658,16 @@ var PS = {};
       };
   };
   var render = function (state) {
+      var search_clear_button = Halogen_HTML_Elements.button([ Halogen_HTML_Events.onClick(function (v) {
+          return ClearSearch.value;
+      }) ])([ Halogen_HTML_Core.text("clear search") ]);
       var search_button = Halogen_HTML_Elements.button([ Halogen_HTML_Events.onClick(function (v) {
           return RunSearch.value;
       }) ])([ Halogen_HTML_Core.text("search") ]);
       var pause_button = (function () {
           var pause_text = (function () {
-              var $54 = state.paused === true;
-              if ($54) {
+              var $59 = state.paused === true;
+              if ($59) {
                   return "resume";
               };
               return "pause";
@@ -8672,12 +8694,12 @@ var PS = {};
                   };
               })(slice);
           };
-          throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 110, column 14 - line 112, column 104): " + [ state.searchResult.constructor.name ]);
+          throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 111, column 14 - line 113, column 104): " + [ state.searchResult.constructor.name ]);
       })();
       var filter_button = (function () {
           var text = (function () {
-              var $57 = state.filter === true;
-              if ($57) {
+              var $62 = state.filter === true;
+              if ($62) {
                   return "off filter";
               };
               return "on filter";
@@ -8689,7 +8711,7 @@ var PS = {};
       var clear_button = Halogen_HTML_Elements.button([ Halogen_HTML_Events.onClick(function (v) {
           return Clear.value;
       }) ])([ Halogen_HTML_Core.text("clear") ]);
-      var form = Halogen_HTML_Elements.form([ Halogen_HTML_Events.onSubmit(Submit.create) ])([ Halogen_HTML_Elements.input([ Halogen_HTML_Properties.type_(Halogen_HTML_Core.isPropInputType)(DOM_HTML_Indexed_InputType.InputText.value), Halogen_HTML_Properties.value(state.inputText), Halogen_HTML_Events.onValueInput(HandleInput.create) ]), Halogen_HTML_Elements.button([ Halogen_HTML_Properties.type_(Halogen_HTML_Core.isPropButtonType)(DOM_HTML_Indexed_ButtonType.ButtonSubmit.value) ])([ Halogen_HTML_Core.text("Send Message") ]), pause_button, filter_button, clear_button, Halogen_HTML_Elements.input([ Halogen_HTML_Properties.type_(Halogen_HTML_Core.isPropInputType)(DOM_HTML_Indexed_InputType.InputText.value), Halogen_HTML_Properties.value(state.searchText), Halogen_HTML_Events.onValueInput(HandleInputSearch.create) ]), search_button ]);
+      var form = Halogen_HTML_Elements.form([ Halogen_HTML_Events.onSubmit(Submit.create) ])([ Halogen_HTML_Elements.input([ Halogen_HTML_Properties.type_(Halogen_HTML_Core.isPropInputType)(DOM_HTML_Indexed_InputType.InputText.value), Halogen_HTML_Properties.value(state.inputText), Halogen_HTML_Events.onValueInput(HandleInput.create) ]), Halogen_HTML_Elements.button([ Halogen_HTML_Properties.type_(Halogen_HTML_Core.isPropButtonType)(DOM_HTML_Indexed_ButtonType.ButtonSubmit.value) ])([ Halogen_HTML_Core.text("Send Message") ]), pause_button, filter_button, clear_button, Halogen_HTML_Elements.input([ Halogen_HTML_Properties.type_(Halogen_HTML_Core.isPropInputType)(DOM_HTML_Indexed_InputType.InputText.value), Halogen_HTML_Properties.value(state.searchText), Halogen_HTML_Events.onValueInput(HandleInputSearch.create) ]), search_button, search_clear_button ]);
       return Halogen_HTML_Elements.div_([ form, Halogen_HTML_Elements.div([ Halogen_HTML_Properties.class_("float-container") ])([ Halogen_HTML_Elements.div([ Halogen_HTML_Properties.class_("packets") ])(Data_Functor.map(Data_Functor.functorArray)(function (msg) {
           return Halogen_HTML_Elements.div([ Halogen_HTML_Properties.class_(entry_type(msg.etype)), Halogen_HTML_Events.onClick(function (v) {
               return new Select(msg.index);
@@ -8714,8 +8736,8 @@ var PS = {};
           if (v instanceof Data_Either.Right) {
               var nentry = new_entry(v.value0);
               var dropcond = (function () {
-                  var $59 = Data_Array.length(st.messages) > 50000;
-                  if ($59) {
+                  var $64 = Data_Array.length(st.messages) > 50000;
+                  if ($64) {
                       return Data_Array.drop(1)(st.messages);
                   };
                   return st.messages;
@@ -8735,7 +8757,7 @@ var PS = {};
           if (v instanceof Data_Either.Left) {
               return st;
           };
-          throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 271, column 3 - line 281, column 9): " + [ v.constructor.name ]);
+          throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 280, column 3 - line 290, column 9): " + [ v.constructor.name ]);
       };
   };
   var handleQuery = function (v) {
