@@ -17,6 +17,7 @@ import Web.Event.Event as Event
 import Simple.JSON as JSON
 import Data.Either
 import Data.Int
+import Data.String as String
 
 type Slot = H.Slot Query Message
 
@@ -26,9 +27,15 @@ data Message = OutputMessage String
 
 data Action
   = HandleInput String
+  | HandleInputSearch String
   | Submit Event
   | Select Int
+  | TurnFilter
+  | PauseResume 
+  | Clear
+  | RunSearch
 
+ 
 data EntryType 
   = Recv 
   | Send 
@@ -49,11 +56,18 @@ type EntryJson =
   , etype :: String 
   }
 
+type Entries = Array Entry
+
 type State =
-  { messages :: Array Entry 
+  { messages :: Entries 
   , inputText :: String
   , selectedIndex :: Int
   , selectedText :: String 
+  , paused :: Boolean
+  , filter :: Boolean
+  , currentWindowStart :: Int
+  , searchResult :: Maybe Entries 
+  , searchText :: String
   }
 
 type DisplayEntry =
@@ -75,7 +89,15 @@ component =
     }
 
 initialState :: forall i. i -> State
-initialState _ = { messages: [] , inputText: "", selectedIndex: 0, selectedText: "" }
+initialState _ = { messages: [] , 
+                   inputText: "", 
+                   selectedIndex: 0, 
+                   selectedText: "" , 
+                   paused: false,
+                   filter: false,
+                   searchResult: Nothing,
+                   currentWindowStart: 0,
+                   searchText: ""}
 
 displayEntry :: String -> Int -> EntryType -> DisplayEntry
 displayEntry a b etype = {txt: a, index: b, etype: etype}
@@ -83,11 +105,34 @@ displayEntry a b etype = {txt: a, index: b, etype: etype}
 render :: forall m. State -> H.ComponentHTML Action () m
 render state =
   let len = A.length state.messages
-      start = (max 0 (len - 500))
+      start = (max 0 (len - 5000))
       slice = A.slice start len state.messages
-      msgs = A.mapWithIndex (\index a -> displayEntry a.summary (index + start) a.etype) slice 
-          
-             
+      msgs = case state.searchResult of
+           Just msgs -> A.mapWithIndex (\index a -> displayEntry a.summary (index + start) a.etype) msgs 
+           Nothing -> A.mapWithIndex (\index a -> displayEntry a.summary (index + start) a.etype) slice 
+      pause_button = HH.button
+                         [ HE.onClick (\_ -> PauseResume)] 
+                         [ HH.text pause_text ]
+                         where
+                               pause_text = if state.paused == true 
+                                              then "resume"
+                                              else "pause"
+      filter_button = HH.button
+                         [ HE.onClick (\_ -> TurnFilter)] 
+                         [ HH.text text ]
+                         where
+                               text = if state.filter == true 
+                                              then "off filter"
+                                              else "on filter"
+                        
+      clear_button = HH.button
+                         [ HE.onClick (\_ -> Clear)] 
+                         [ HH.text "clear" ]
+            
+      search_button = HH.button
+                         [ HE.onClick (\_ -> RunSearch)] 
+                         [ HH.text "search" ]
+ 
       form = HH.form
                [ HE.onSubmit Submit ] 
                [
@@ -99,6 +144,15 @@ render state =
                 , HH.button
                     [ HP.type_ HP.ButtonSubmit ]
                     [ HH.text "Send Message" ]
+                , pause_button 
+                , filter_button
+                , clear_button
+                , HH.input
+                    [ HP.type_ HP.InputText
+                    , HP.value (state.searchText)
+                    , HE.onValueInput HandleInputSearch
+                    ]
+                , search_button
                 ]
 
    in
@@ -145,6 +199,10 @@ handleAction :: forall m. MonadEffect m => Action -> H.HalogenM State Action () 
 handleAction = case _ of
   HandleInput text -> do
     H.modify_ (_ { inputText = text })
+
+  HandleInputSearch text -> do
+    H.modify_ (_ { searchText = text })
+
   Submit ev -> do
     H.liftEffect $ Event.preventDefault ev
     st <- H.get
@@ -154,9 +212,43 @@ handleAction = case _ of
       {
        inputText = ""
       }
+
+  RunSearch -> do
+    st <- H.get
+    H.modify_ \st' -> st'
+      {
+         searchResult = runSearch st' 
+      }
+
   Select ev -> do
     H.modify_ \st' -> updateText st' ev
 
+  PauseResume -> do
+    H.modify_ (\st -> st{ paused = switch st.paused} ) 
+
+  TurnFilter -> do
+    H.modify_ (\st -> st{ filter = switch st.filter} ) 
+    st <- H.get
+    let onoff = "filter" <> case st.filter of
+                                   true -> "on"
+                                   false -> "off"
+    H.raise $ OutputMessage onoff
+
+  Clear -> do
+    H.modify_ (\st -> st{ messages = [], currentWindowStart = 0, searchResult = Nothing} ) 
+
+
+runSearch :: State -> Maybe Entries 
+runSearch st =
+  let searchtext = String.Pattern st.searchText
+      result = A.filter (\a -> not $ (String.indexOf searchtext a.full) == Nothing ) st.messages
+  in Just result 
+
+
+
+switch :: Boolean -> Boolean
+switch true = false 
+switch false = true                  
 
 updateText :: State -> Int -> State
 updateText st ev = 
@@ -177,7 +269,7 @@ append_msg incomingMessage st =
          st { messages = dropcond `A.snoc` nentry }
          where
                messages = st.messages
-               dropcond = if A.length st.messages > 5000 
+               dropcond = if A.length st.messages > 50000 
                           then A.drop 1 st.messages
                           else st.messages
                nentry = new_entry r 
