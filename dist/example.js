@@ -8683,7 +8683,7 @@ var PS = {};
           if (state.searchResult instanceof Data_Maybe.Just) {
               return Data_Array.mapWithIndex(function (index) {
                   return function (a) {
-                      return displayEntry(a.summary)(index + start | 0)(a.etype);
+                      return displayEntry(a.summary)(index)(a.etype);
                   };
               })(state.searchResult.value0);
           };

@@ -109,7 +109,7 @@ render state =
       start = (max 0 (len - 5000))
       slice = A.slice start len state.messages
       msgs = case state.searchResult of
-           Just msgs -> A.mapWithIndex (\index a -> displayEntry a.summary (index + start) a.etype) msgs 
+           Just msgs -> A.mapWithIndex (\index a -> displayEntry a.summary index a.etype) msgs 
            Nothing -> A.mapWithIndex (\index a -> displayEntry a.summary (index + start) a.etype) slice 
       pause_button = HH.button
                          [ HE.onClick (\_ -> PauseResume)] 
