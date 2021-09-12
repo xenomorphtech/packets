@@ -109,8 +109,9 @@ displayEntry a b etype = {txt: a, index: b, etype: etype}
 render :: forall m. State -> H.ComponentHTML Action () m
 render state =
   let len = A.length state.messages
-      start = (max state.currentWindowStart (len - 5000))
-      slice = A.slice start len state.messages
+      start = state.currentWindowStart
+      end = min (start + 5000) len 
+      slice = A.slice start end state.messages
       msgs = case state.searchResult of
            Just msgs -> A.mapWithIndex (\index a -> displayEntry a.summary index a.etype) msgs 
            Nothing -> A.mapWithIndex (\index a -> displayEntry a.summary (index + start) a.etype) slice 

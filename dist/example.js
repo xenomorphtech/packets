@@ -8463,7 +8463,7 @@ var PS = {};
               if (st.searchResult instanceof Data_Maybe.Just) {
                   return st.searchResult.value0;
               };
-              throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 289, column 28 - line 291, column 50): " + [ st.searchResult.constructor.name ]);
+              throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 290, column 28 - line 292, column 50): " + [ st.searchResult.constructor.name ]);
           })();
           var something = (function () {
               var v = Data_Array.index(messagesSource)(ev);
@@ -8473,7 +8473,7 @@ var PS = {};
               if (v instanceof Data_Maybe.Nothing) {
                   return "(NULL)";
               };
-              throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 292, column 23 - line 294, column 47): " + [ v.constructor.name ]);
+              throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 293, column 23 - line 295, column 47): " + [ v.constructor.name ]);
           })();
           return {
               messages: st.messages,
@@ -8495,7 +8495,7 @@ var PS = {};
       if (!v) {
           return true;
       };
-      throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 283, column 1 - line 283, column 29): " + [ v.constructor.name ]);
+      throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 284, column 1 - line 284, column 29): " + [ v.constructor.name ]);
   };
   var runSearch = function (st) {
       var result = Data_Array.filter(function (a) {
@@ -8623,7 +8623,7 @@ var PS = {};
                           if (!st.filter) {
                               return "off";
                           };
-                          throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 263, column 29 - line 265, column 50): " + [ st.filter.constructor.name ]);
+                          throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 264, column 29 - line 266, column 50): " + [ st.filter.constructor.name ]);
                       })();
                       return Halogen_Query_HalogenM.raise(new OutputMessage(onoff));
                   });
@@ -8655,7 +8655,7 @@ var PS = {};
                   return $61;
               });
           };
-          throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 222, column 16 - line 272, column 53): " + [ v.constructor.name ]);
+          throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 223, column 16 - line 273, column 53): " + [ v.constructor.name ]);
       };
   };
   var entry_type_json = function (etype) {
@@ -8691,7 +8691,7 @@ var PS = {};
       if (etype instanceof Log) {
           return "log";
       };
-      throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 213, column 3 - line 217, column 20): " + [ etype.constructor.name ]);
+      throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 214, column 3 - line 218, column 20): " + [ etype.constructor.name ]);
   };
   var displayEntry = function (a) {
       return function (b) {
@@ -8731,8 +8731,20 @@ var PS = {};
           }) ])([ Halogen_HTML_Core.text(pause_text) ]);
       })();
       var len = Data_Array.length(state.messages);
-      var start = Data_Ord.max(Data_Ord.ordInt)(state.currentWindowStart)(len - 5000 | 0);
-      var slice = Data_Array.slice(start)(len)(state.messages);
+      var filter_button = (function () {
+          var text = (function () {
+              var $67 = state.filter === true;
+              if ($67) {
+                  return "off filter";
+              };
+              return "on filter";
+          })();
+          return Halogen_HTML_Elements.button([ Halogen_HTML_Events.onClick(function (v) {
+              return TurnFilter.value;
+          }) ])([ Halogen_HTML_Core.text(text) ]);
+      })();
+      var end = Data_Ord.min(Data_Ord.ordInt)(state.currentWindowStart + 5000 | 0)(len);
+      var slice = Data_Array.slice(state.currentWindowStart)(end)(state.messages);
       var msgs = (function () {
           if (state.searchResult instanceof Data_Maybe.Just) {
               return Data_Array.mapWithIndex(function (index) {
@@ -8744,23 +8756,11 @@ var PS = {};
           if (state.searchResult instanceof Data_Maybe.Nothing) {
               return Data_Array.mapWithIndex(function (index) {
                   return function (a) {
-                      return displayEntry(a.summary)(index + start | 0)(a.etype);
+                      return displayEntry(a.summary)(index + state.currentWindowStart | 0)(a.etype);
                   };
               })(slice);
           };
-          throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 114, column 14 - line 116, column 104): " + [ state.searchResult.constructor.name ]);
-      })();
-      var filter_button = (function () {
-          var text = (function () {
-              var $69 = state.filter === true;
-              if ($69) {
-                  return "off filter";
-              };
-              return "on filter";
-          })();
-          return Halogen_HTML_Elements.button([ Halogen_HTML_Events.onClick(function (v) {
-              return TurnFilter.value;
-          }) ])([ Halogen_HTML_Core.text(text) ]);
+          throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 115, column 14 - line 117, column 104): " + [ state.searchResult.constructor.name ]);
       })();
       var clear_button = Halogen_HTML_Elements.button([ Halogen_HTML_Events.onClick(function (v) {
           return Clear.value;
@@ -8809,7 +8809,7 @@ var PS = {};
           if (v instanceof Data_Either.Left) {
               return st;
           };
-          throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 304, column 3 - line 312, column 9): " + [ v.constructor.name ]);
+          throw new Error("Failed pattern match at Example.Driver.Websockets.Log (line 305, column 3 - line 313, column 9): " + [ v.constructor.name ]);
       };
   };
   var handleQuery = function (v) {
