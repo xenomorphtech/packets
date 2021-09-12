@@ -16,8 +16,9 @@ import Web.Event.Event (Event)
 import Web.Event.Event as Event
 import Simple.JSON as JSON
 import Data.Either
-import Data.Int
+import Data.Int (toStringAs, decimal)
 import Data.String as String
+
 
 type Slot = H.Slot Query Message
 
@@ -35,6 +36,8 @@ data Action
   | Clear
   | RunSearch
   | ClearSearch
+  | SlideWindow Int 
+
 
  
 data EntryType 
@@ -106,7 +109,7 @@ displayEntry a b etype = {txt: a, index: b, etype: etype}
 render :: forall m. State -> H.ComponentHTML Action () m
 render state =
   let len = A.length state.messages
-      start = (max 0 (len - 5000))
+      start = (max state.currentWindowStart (len - 5000))
       slice = A.slice start len state.messages
       msgs = case state.searchResult of
            Just msgs -> A.mapWithIndex (\index a -> displayEntry a.summary index a.etype) msgs 
@@ -138,6 +141,17 @@ render state =
                          [ HE.onClick (\_ -> ClearSearch)] 
                          [ HH.text "clear search" ]
  
+      slide_button = HH.button
+                         [ HE.onClick (\_ -> SlideWindow 2500 )] 
+                         [ HH.text "+2500" ]
+      slide_button_sub = HH.button
+                         [ HE.onClick (\_ -> SlideWindow (-2500::Int) )] 
+                         [ HH.text "-2500" ]
+ 
+ 
+      bufcount = toStringAs decimal (A.length state.messages)
+      window = toStringAs decimal (state.currentWindowStart)
+
       form = HH.form
                [ HE.onSubmit Submit ] 
                [
@@ -159,7 +173,10 @@ render state =
                     ]
                 , search_button
                 , search_clear_button 
-                ]
+                , HH.text ("buffer: " <> bufcount <> " / 100000 window: "<>window)
+                , slide_button
+                , slide_button_sub
+                 ]
 
    in
        HH.div_ 
@@ -218,9 +235,16 @@ handleAction = case _ of
       {
        inputText = ""
       }
+ 
+  SlideWindow count -> do
+    H.modify_ \st' -> st'
+      {
+         currentWindowStart = max 0 (min (st'.currentWindowStart + count) ((A.length st'.messages) - 1))
+      }
+
+
 
   RunSearch -> do
-    st <- H.get
     H.modify_ \st' -> st'
       {
          searchResult = runSearch st' 
@@ -279,12 +303,10 @@ append_msg :: String -> State -> State
 append_msg incomingMessage st = 
   case JSON.readJSON incomingMessage of
     Right (r :: EntryJson) -> do  
-         st { messages = dropcond `A.snoc` nentry }
+         if A.length st.messages > 100000 
+                          then st 
+                          else st { messages = st.messages `A.snoc` nentry }
          where
-               messages = st.messages
-               dropcond = if A.length st.messages > 50000 
-                          then A.drop 1 st.messages
-                          else st.messages
                nentry = new_entry r 
     Left e -> 
       st 
