@@ -19,6 +19,7 @@ import Data.Either
 import Data.Int (toStringAs, decimal)
 import Data.String as String
 
+import Data.Function.Uncurried (Fn1(),runFn1, Fn0, runFn0)
 
 type Slot = H.Slot Query Message
 
@@ -187,7 +188,9 @@ render state =
              [  HP.class_ $ ClassName "float-container" ]
          [
           HH.div 
-             [  HP.class_ $ ClassName "packets" ]
+             [  HP.class_ $ ClassName "packets"
+             , HP.id_ "packets" 
+             ]
               ( map  (\msg -> HH.div [ 
                 HP.class_ $ ClassName (entry_type msg.etype)
                 , HE.onClick (\_ -> Select msg.index) 
@@ -320,6 +323,9 @@ new_entry r =
 handleQuery :: forall m a. Query a -> H.HalogenM State Action () Message m (Maybe a)
 handleQuery = case _ of
   ReceiveMessage msg a -> do
-    let incomingMessage = " " <> msg
+    let incomingMessage = runFn1 scrollBottomImpl msg
     H.modify_ (\st -> append_msg incomingMessage st )
+    let x = runFn1 scrollBottomImpl "something"
     pure (Just a)
+
+foreign import scrollBottomImpl :: Fn1 String String 
