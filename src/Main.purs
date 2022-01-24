@@ -63,7 +63,7 @@ wsSender socket = case _ of
 
 main :: Effect Unit
 main = do
-  connection <- WS.create "ws://localhost:30110/ws" []
+  connection <- WS.create "ws://127.0.0.1:30110/ws" []
   HA.runHalogenAff do
     body <- HA.awaitBody
     io <- runUI Log.component unit body
