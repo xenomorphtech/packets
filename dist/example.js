@@ -6720,11 +6720,13 @@ var PS = {};
 
   exports.scrollBottomImpl = function(a) {
       // console.log("did run" + a);
-
-         var elem = document.getElementById("packets");
-         if (elem) {
-             elem.scrollTo(0, elem.scrollHeight)
-         }
+      var elem = document.getElementById("packets");
+      if (elem) {
+           if (elem.offsetHeight + elem.scrollTop >= elem.scrollHeight) {
+    
+               elem.scrollTo(0, elem.scrollHeight)
+           }
+      }
  
       return a;
   };
